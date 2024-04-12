@@ -1,0 +1,13 @@
+runtime: nodejs20 # Ensures compatibility, though primarily serving static files
+
+handlers:
+  - url: /assets
+    static_dir: dist/assets
+
+  - url: /(.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot))$
+    static_files: dist/\1
+    upload: dist/.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot)$
+
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
