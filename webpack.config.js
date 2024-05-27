@@ -1,39 +1,39 @@
-const CopyPlugin = require('copy-webpack-plugin');
-const HandlebarsPlugin = require('handlebars-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const TerserPlugin = require('terser-webpack-plugin');
-const autoprefixer = require('autoprefixer');
-const path = require('path');
-const package = require('./package.json');
+const CopyPlugin = require("copy-webpack-plugin");
+const HandlebarsPlugin = require("handlebars-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
+const TerserPlugin = require("terser-webpack-plugin");
+const autoprefixer = require("autoprefixer");
+const path = require("path");
+const package = require("./package.json");
 
 const paths = {
   src: {
-    favicon: './src/favicon',
-    fonts: './src/fonts',
-    img: './src/img',
-    js: './src/js',
-    scss: './src/scss',
-    video: './src/video',
+    favicon: "./src/favicon",
+    fonts: "./src/fonts",
+    img: "./src/img",
+    js: "./src/js",
+    scss: "./src/scss",
+    video: "./src/video",
   },
   dist: {
-    css: './assets/css',
-    favicon: './assets/favicon',
-    fonts: './assets/fonts',
-    img: './assets/img',
-    js: './assets/js',
-    video: './assets/video',
+    css: "./assets/css",
+    favicon: "./assets/favicon",
+    fonts: "./assets/fonts",
+    img: "./assets/img",
+    js: "./assets/js",
+    video: "./assets/video",
   },
 };
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: "source-map",
   entry: {
-    libs: [paths.src.scss + '/libs.scss'],
-    theme: [paths.src.js + '/theme.js', paths.src.scss + '/theme.scss'],
+    libs: [paths.src.scss + "/libs.scss"],
+    theme: [paths.src.js + "/theme.js", paths.src.scss + "/theme.scss"],
   },
-  mode: 'development',
+  mode: "development",
   module: {
     rules: [
       {
@@ -44,21 +44,21 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               url: false,
             },
           },
           {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
             options: {
               postcssOptions: {
-                plugins: [['autoprefixer']],
+                plugins: [["autoprefixer"]],
               },
             },
           },
           {
-            loader: 'sass-loader',
+            loader: "sass-loader",
           },
         ],
       },
@@ -69,8 +69,8 @@ module.exports = {
       cacheGroups: {
         vendor: {
           test: /[\\/](node_modules)[\\/].+\.js$/,
-          name: 'vendor',
-          chunks: 'all',
+          name: "vendor",
+          chunks: "all",
         },
       },
     },
@@ -87,7 +87,7 @@ module.exports = {
     ],
   },
   output: {
-    filename: paths.dist.js + '/[name].bundle.js',
+    filename: paths.dist.js + "/[name].bundle.js",
   },
   plugins: [
     new CopyPlugin({
@@ -111,12 +111,14 @@ module.exports = {
       ],
     }),
     new HandlebarsPlugin({
-      entry: path.join(process.cwd(), 'src', 'html', '**', '*.html'),
-      output: path.join(process.cwd(), 'dist', '[path]', '[name].html'),
-      partials: [path.join(process.cwd(), 'src', 'partials', '**', '*.{html,svg}')],
+      entry: path.join(process.cwd(), "src", "html", "**", "*.html"),
+      output: path.join(process.cwd(), "dist", "[path]", "[name].html"),
+      partials: [
+        path.join(process.cwd(), "src", "partials", "**", "*.{html,svg}"),
+      ],
       helpers: {
         is: function (v1, v2, options) {
-          const variants = v2.split(' || ');
+          const variants = v2.split(" || ");
           const isTrue = variants.some((variant) => v1 === variant);
 
           return isTrue ? options.fn(this) : options.inverse(this);
@@ -125,27 +127,33 @@ module.exports = {
           return v1 !== v2 ? options.fn(this) : options.inverse(this);
         },
         webRoot: function () {
-          return '{{webRoot}}';
+          return "{{webRoot}}";
         },
         themeVersion: function () {
-          return '{{themeVersion}}';
+          return "{{themeVersion}}";
         },
       },
       onBeforeSave: function (Handlebars, resultHtml, filename) {
-        const level = filename.split('//').pop().split('/').length;
-        const resultHtmlWithWebRoot = resultHtml.replaceAll('{{webRoot}}', '.'.repeat(level));
-        const resultHtmlWithThemeVersion = resultHtmlWithWebRoot.replaceAll('{{themeVersion}}', package.version);
+        const level = filename.split("//").pop().split("/").length;
+        const resultHtmlWithWebRoot = resultHtml.replaceAll(
+          "{{webRoot}}",
+          ".".repeat(level)
+        );
+        const resultHtmlWithThemeVersion = resultHtmlWithWebRoot.replaceAll(
+          "{{themeVersion}}",
+          package.version
+        );
 
         return resultHtmlWithThemeVersion;
       },
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
-      filename: paths.dist.css + '/[name].bundle.css',
+      filename: paths.dist.css + "/[name].bundle.css",
     }),
   ],
   devServer: {
-    watchFiles: ['src/html/**/*', 'src/partials/**/*'],
+    watchFiles: ["src/html/**/*", "src/partials/**/*"],
   },
-  target: 'web',
+  target: "web",
 };
