@@ -62,6 +62,10 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.html$/,
+        use: ["html-loader"],
+      },
     ],
   },
   optimization: {
@@ -88,6 +92,8 @@ module.exports = {
   },
   output: {
     filename: paths.dist.js + "/[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/",
   },
   plugins: [
     new CopyPlugin({
@@ -154,6 +160,7 @@ module.exports = {
   ],
   devServer: {
     watchFiles: ["src/html/**/*", "src/partials/**/*"],
+    historyApiFallback: true,
   },
   target: "web",
 };

@@ -4,9 +4,10 @@ handlers:
   - url: /assets
     static_dir: dist/assets
 
-  - url: /(.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot))$
+  # Added html at the end of these to get it to server the "new" pages I added and have hrefs for in prod.
+  - url: /(.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot|html))$
     static_files: dist/\1
-    upload: dist/.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot)$
+    upload: dist/.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff|woff2|ttf|eot|html)$
 
   - url: /.*
     static_files: dist/index.html
